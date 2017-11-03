@@ -1,8 +1,8 @@
 module.exports = class InView {
 
 	/*
+		elements = document.querySelectorAll('.dot')
 		options = {
-			elements: document.querySelectorAll('.dot'),
 			thresholds: [
 				{
 					threshold: 0, // 0 to 1
@@ -11,13 +11,11 @@ module.exports = class InView {
 					once: true,
 				},
 			],
-
 		}
-
 	*/
 
-	constructor(options) {
-		this.elements = options.elements
+	constructor(elements, options) {
+		this.elements = elements
 		this.thresholds = this.parseThresholds(options)
 
 		this.observe(this.thresholds)
@@ -78,8 +76,14 @@ module.exports = class InView {
 			let callback = null
 			if (intersectionRatio > threshold.threshold) {
 				callback = threshold.in
+				if (threshold.once) {
+					// @TODO
+				}
 			} else {
 				callback = threshold.out
+				if (threshold.once) {
+					// @TODO
+				}
 			}
 			callback.call(null, entry.target, entry)
 		})
