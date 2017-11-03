@@ -18,6 +18,7 @@ module.exports = class InView {
 		this.elements = elements
 		this.thresholds = this.parseThresholds(options)
 
+		this.observer = this.createObserver(this.thresholds)
 		this.observe(this.thresholds)
 	}
 
@@ -49,7 +50,7 @@ module.exports = class InView {
 	}
 
 
-	observe(thresholds) {
+	createObserver(thresholds) {
 		const observerOptions = {
 			threshold: [],
 		}
@@ -58,13 +59,15 @@ module.exports = class InView {
 			observerOptions.threshold.push(threshold.threshold)
 		})
 
-
-		const observer = new IntersectionObserver((entries) => {
+		return new IntersectionObserver((entries) => {
 			entries.forEach((entry) => this.trigger(entry))
 		}, observerOptions)
+	}
 
+
+	observe(thresholds) {
 		this.elements.forEach((element) => {
-			observer.observe(element)
+			this.observer.observe(element)
 		})
 	}
 
