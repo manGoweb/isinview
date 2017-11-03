@@ -8,7 +8,7 @@ module.exports = class InView {
 					threshold: 0, // 0 to 1
 					in: (element, entry) => void,
 					out: (element, entry) => void,
-					once: true,
+					once: false,
 				},
 			],
 		}
@@ -27,8 +27,8 @@ module.exports = class InView {
 		if (data.threshold || data.in || data.out)
 		return {
 			threshold: data.threshold || 0,
-			in: data.in || (() => {}),
-			out: data.out || (() => {}),
+			in: data.in || null,
+			out: data.out || null,
 			once: data.once || false,
 		}
 		return null
@@ -79,16 +79,15 @@ module.exports = class InView {
 			let callback = null
 			if (intersectionRatio > threshold.threshold) {
 				callback = threshold.in
-				if (threshold.once) {
-					// @TODO
-				}
 			} else {
 				callback = threshold.out
-				if (threshold.once) {
-					// @TODO
-				}
 			}
-			callback.call(null, entry.target, entry)
+			if (callback) {
+				if (threshold.once) {
+					this.observer.unobserve(entry.target)
+				}
+				callback.call(null, entry.target, entry)
+			}
 		})
 	}
 
