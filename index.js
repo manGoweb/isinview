@@ -24,9 +24,18 @@ module.exports = class InView {
 		this.elements = elements
 		this.thresholds = this._parseThresholds(options)
 
+		this.entries = []
+
 		this.margin = options.margin || null
 		this.observer = this._createObserver(this.thresholds)
 		this._observe(this.thresholds)
+	}
+
+
+	destroy() {
+		this.elements.forEach((element) => {
+			this.observer.unobserve(element)
+		})
 	}
 
 
