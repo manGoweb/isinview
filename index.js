@@ -35,7 +35,11 @@ module.exports = class InView {
 		return {
 			threshold: data.threshold || 0,
 			in: data.in || null,
+			inTop: data.inTop || null,
+			inBottom: data.inBottom || null,
 			out: data.out || null,
+			outTop: data.outTop || null,
+			outBottom: data.outBottom || null,
 			once: data.once || false,
 		}
 		return null
@@ -86,12 +90,27 @@ module.exports = class InView {
 	_trigger(entry) {
 		const intersectionRatio = entry.intersectionRatio
 		const callbacks = []
+		const rect = entry.boundingClientRect
 
 		this.thresholds.forEach((threshold) => {
 			if (intersectionRatio > threshold.threshold) {
 				callbacks.push(threshold.in)
+
+				if (rect.top + rect.height / 2 < window.innerHeight / 2) {
+					callbacks.push(threshold.inTop)
+				} else {
+					callbacks.push(threshold.inBottom)
+				}
+
 			} else {
 				callbacks.push(threshold.out)
+
+				if (rect.top + rect.height / 2 < window.innerHeight / 2) {
+					callbacks.push(threshold.outTop)
+				} else {
+					callbacks.push(threshold.outBottom)
+				}
+
 			}
 
 			if (callbacks.length) {
