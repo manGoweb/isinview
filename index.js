@@ -13,6 +13,7 @@ module.exports = class InView {
 					out: (element, entry) => void,
 					outTop: (element, entry) => void,
 					outBottom: (element, entry) => void,
+					margin: '10px 20px 30px 40px',
 					once: false,
 				},
 			],
@@ -23,6 +24,7 @@ module.exports = class InView {
 		this.elements = elements
 		this.thresholds = this.parseThresholds(options)
 
+		this.margin = options.margin || null
 		this.observer = this.createObserver(this.thresholds)
 		this.observe(this.thresholds)
 	}
@@ -58,6 +60,10 @@ module.exports = class InView {
 	createObserver(thresholds) {
 		const observerOptions = {
 			threshold: [],
+		}
+
+		if (this.margin) {
+			observerOptions.rootMargin = this.margin
 		}
 
 		thresholds.forEach((threshold) => {
