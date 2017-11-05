@@ -22,15 +22,15 @@ module.exports = class InView {
 
 	constructor(elements, options) {
 		this.elements = elements
-		this.thresholds = this.parseThresholds(options)
+		this.thresholds = this._parseThresholds(options)
 
 		this.margin = options.margin || null
-		this.observer = this.createObserver(this.thresholds)
-		this.observe(this.thresholds)
+		this.observer = this._createObserver(this.thresholds)
+		this._observe(this.thresholds)
 	}
 
 
-	parseThreshold(data) {
+	_parseThreshold(data) {
 		if (data.threshold || data.in || data.out)
 		return {
 			threshold: data.threshold || 0,
@@ -42,14 +42,14 @@ module.exports = class InView {
 	}
 
 
-	parseThresholds(options) {
+	_parseThresholds(options) {
 		const thresholds = []
 
-		thresholds.push(this.parseThreshold(options))
+		thresholds.push(this._parseThreshold(options))
 
 		if (options.thresholds) {
 			options.thresholds.forEach((threshold) => {
-				thresholds.push(this.parseThreshold(threshold))
+				thresholds.push(this._parseThreshold(threshold))
 			})
 		}
 
@@ -57,7 +57,7 @@ module.exports = class InView {
 	}
 
 
-	createObserver(thresholds) {
+	_createObserver(thresholds) {
 		const observerOptions = {
 			threshold: [],
 		}
@@ -71,19 +71,19 @@ module.exports = class InView {
 		})
 
 		return new IntersectionObserver((entries) => {
-			entries.forEach((entry) => this.trigger(entry))
+			entries.forEach((entry) => this._trigger(entry))
 		}, observerOptions)
 	}
 
 
-	observe(thresholds) {
+	_observe(thresholds) {
 		this.elements.forEach((element) => {
 			this.observer.observe(element)
 		})
 	}
 
 
-	trigger(entry) {
+	_trigger(entry) {
 		const intersectionRatio = entry.intersectionRatio
 		const callbacks = []
 
