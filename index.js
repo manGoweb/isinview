@@ -100,12 +100,13 @@ module.exports = class IsInView {
 		const intersectionRatio = entry.intersectionRatio
 		const callbacks = []
 		const rect = entry.boundingClientRect
+		const fromTop = rect.top + rect.height / 2 < window.innerHeight / 2
 
 		this.thresholds.forEach((threshold) => {
 			if (intersectionRatio > threshold.threshold) {
 				callbacks.push(threshold.in)
 
-				if (rect.top + rect.height / 2 < window.innerHeight / 2) {
+				if (fromTop) {
 					callbacks.push(threshold.inTop)
 				} else {
 					callbacks.push(threshold.inBottom)
@@ -114,7 +115,7 @@ module.exports = class IsInView {
 			} else {
 				callbacks.push(threshold.out)
 
-				if (rect.top + rect.height / 2 < window.innerHeight / 2) {
+				if (fromTop) {
 					callbacks.push(threshold.outTop)
 				} else {
 					callbacks.push(threshold.outBottom)
