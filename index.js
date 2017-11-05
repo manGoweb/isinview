@@ -98,7 +98,7 @@ module.exports = class IsInView {
 
 	_trigger(entry) {
 		const intersectionRatio = entry.intersectionRatio
-		const callbacks = []
+		let callbacks = []
 		const rect = entry.boundingClientRect
 		const fromTop = rect.top + rect.height / 2 < window.innerHeight / 2
 
@@ -123,7 +123,7 @@ module.exports = class IsInView {
 
 			}
 
-			callbacks.filter((callback) => callback !== null)
+			callbacks = callbacks.filter((callback) => callback !== null)
 			if (callbacks.length) {
 				if (threshold.once) {
 					this.observer.unobserve(entry.target)
