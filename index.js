@@ -1,4 +1,4 @@
-module.exports = class InView {
+module.exports = class IsInView {
 
 	/*
 		elements = document.querySelectorAll('.dot')

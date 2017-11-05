@@ -1,5 +1,5 @@
 {
-  "name": "inview",
+  "name": "isinview",
   "version": "1.0.0",
   "description": "Watch elements entering or leaving viewport",
   "main": "index.js",
