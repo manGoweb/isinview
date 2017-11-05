@@ -103,7 +103,7 @@ module.exports = class IsInView {
 		const fromTop = rect.top + rect.height / 2 < window.innerHeight / 2
 
 		this.thresholds.forEach((threshold) => {
-			if (intersectionRatio > threshold.threshold) {
+			if (intersectionRatio >= threshold.threshold) {
 				callbacks.push(threshold.in)
 
 				if (fromTop) {
