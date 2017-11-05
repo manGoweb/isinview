@@ -1,10 +1,14 @@
 {
   "name": "isinview",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Watch elements entering or leaving viewport",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thoughtbot/bourbon.git"
   },
   "author": "Filip Chalupa <chalupa.filip\u001b\u0016@@gmail.com>",
   "license": "ISC"
