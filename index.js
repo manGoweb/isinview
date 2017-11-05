@@ -7,7 +7,12 @@ module.exports = class InView {
 				{
 					threshold: 0, // 0 to 1
 					in: (element, entry) => void,
+					inTop: (element, entry) => void,
+					inBottom: (element, entry) => void,
+					in: (element, entry) => void,
 					out: (element, entry) => void,
+					outTop: (element, entry) => void,
+					outBottom: (element, entry) => void,
 					once: false,
 				},
 			],
@@ -74,20 +79,24 @@ module.exports = class InView {
 
 	trigger(entry) {
 		const intersectionRatio = entry.intersectionRatio
+		const callbacks = []
 
 		this.thresholds.forEach((threshold) => {
-			let callback = null
 			if (intersectionRatio > threshold.threshold) {
-				callback = threshold.in
+				callbacks.push(threshold.in)
 			} else {
-				callback = threshold.out
+				callbacks.push(threshold.out)
 			}
-			if (callback) {
+
+			if (callbacks.length) {
 				if (threshold.once) {
 					this.observer.unobserve(entry.target)
 				}
-				callback.call(null, entry.target, entry)
+				callbacks.forEach((callback) => {
+					callback.call(null, entry.target, entry)
+				})
 			}
+
 		})
 	}
 
