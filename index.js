@@ -122,6 +122,7 @@ module.exports = class IsInView {
 
 			}
 
+			callbacks.filter((callback) => callback !== null)
 			if (callbacks.length) {
 				if (threshold.once) {
 					this.observer.unobserve(entry.target)
