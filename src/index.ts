@@ -1,5 +1,19 @@
-module.exports = class IsInView {
+type Callback = (element: HTMLElement, entry: any) => void
 
+export interface IsInViewOptions {
+	threshold?: number
+	thresholds?: number[]
+	in?: Callback
+	inTop?: Callback
+	inBottom?: Callback
+	out?: Callback
+	outTop?: Callback
+	outBottom?: Callback
+	margin?: string
+	once?: boolean
+}
+
+export default class IsInView {
 	/*
 		elements = document.querySelectorAll('.dot')
 		options = {
@@ -20,42 +34,46 @@ module.exports = class IsInView {
 		}
 	*/
 
-	constructor(elements, options) {
-		this.elements = elements
-		this.thresholds = this._parseThresholds(options)
+	private elements: NodeListOf<HTMLElement> | HTMLElement[]
+	private thresholds: any
+	private margin: any
+	private observer: IntersectionObserver
 
-		this.entries = []
+	constructor(
+		elements: HTMLElement | NodeListOf<HTMLElement> | HTMLElement[],
+		options: IsInViewOptions
+	) {
+		this.elements = elements instanceof HTMLElement ? [elements] : elements
+		this.thresholds = this._parseThresholds(options)
 
 		this.margin = options.margin || null
 		this.observer = this._createObserver(this.thresholds)
-		this._observe(this.thresholds)
+		this._observe()
 	}
 
-
-	destroy() {
-		this.elements.forEach((element) => {
+	public destroy() {
+		this.elements.forEach((element: HTMLElement) => {
 			this.observer.unobserve(element)
 		})
 	}
 
-
-	_parseThreshold(data) {
-		if (data.threshold || data.in || data.out)
-		return {
-			threshold: data.threshold || 0,
-			in: data.in || null,
-			inTop: data.inTop || null,
-			inBottom: data.inBottom || null,
-			out: data.out || null,
-			outTop: data.outTop || null,
-			outBottom: data.outBottom || null,
-			once: data.once || false,
+	private _parseThreshold(data: any) {
+		if (data.threshold || data.in || data.out) {
+			return {
+				threshold: data.threshold || 0,
+				in: data.in || null,
+				inTop: data.inTop || null,
+				inBottom: data.inBottom || null,
+				out: data.out || null,
+				outTop: data.outTop || null,
+				outBottom: data.outBottom || null,
+				once: data.once || false,
+			}
 		}
 		return null
 	}
 
-
-	_parseThresholds(options) {
+	private _parseThresholds(options: IsInViewOptions) {
 		const thresholds = []
 
 		thresholds.push(this._parseThreshold(options))
@@ -69,17 +87,18 @@ module.exports = class IsInView {
 		return thresholds.filter((threshold) => threshold !== null)
 	}
 
-
-	_createObserver(thresholds) {
+	private _createObserver(thresholds: any) {
 		const observerOptions = {
 			threshold: [],
 		}
 
 		if (this.margin) {
+			// @ts-ignore
 			observerOptions.rootMargin = this.margin
 		}
 
-		thresholds.forEach((threshold) => {
+		thresholds.forEach((threshold: any) => {
+			// @ts-ignore
 			observerOptions.threshold.push(threshold.threshold)
 		})
 
@@ -88,21 +107,19 @@ module.exports = class IsInView {
 		}, observerOptions)
 	}
 
-
-	_observe(thresholds) {
-		this.elements.forEach((element) => {
+	private _observe() {
+		this.elements.forEach((element: HTMLElement) => {
 			this.observer.observe(element)
 		})
 	}
 
-
-	_trigger(entry) {
+	private _trigger(entry: any) {
 		const intersectionRatio = entry.intersectionRatio
-		let callbacks = []
+		let callbacks: Callback[] = []
 		const rect = entry.boundingClientRect
 		const fromTop = rect.top + rect.height / 2 < window.innerHeight / 2
 
-		this.thresholds.forEach((threshold) => {
+		this.thresholds.forEach((threshold: any) => {
 			if (intersectionRatio >= threshold.threshold) {
 				callbacks.push(threshold.in)
 
@@ -111,7 +128,6 @@ module.exports = class IsInView {
 				} else {
 					callbacks.push(threshold.inBottom)
 				}
-
 			} else {
 				callbacks.push(threshold.out)
 
@@ -120,7 +136,6 @@ module.exports = class IsInView {
 				} else {
 					callbacks.push(threshold.outBottom)
 				}
-
 			}
 
 			callbacks = callbacks.filter((callback) => callback !== null)
@@ -132,8 +147,6 @@ module.exports = class IsInView {
 					callback.call(null, entry.target, entry)
 				})
 			}
-
 		})
 	}
-
 }
