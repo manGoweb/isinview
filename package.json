@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/thoughtbot/bourbon.git"
+    "url": "https://github.com/Onset/isinview.git"
   },
   "author": "Filip Chalupa <chalupa.filip\u001b\u0016@@gmail.com>",
   "license": "ISC"
