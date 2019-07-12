@@ -2,6 +2,12 @@
 
 Watch elements entering or leaving a viewport.
 
+## Installation
+
+```bash
+npm install isinview
+```
+
 ## How to use
 
 ```javascript
