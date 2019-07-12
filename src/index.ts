@@ -1,152 +1,74 @@
-type Callback = (element: HTMLElement, entry: any) => void
-
-export interface IsInViewOptions {
-	threshold?: number
-	thresholds?: number[]
-	in?: Callback
-	inTop?: Callback
-	inBottom?: Callback
-	out?: Callback
-	outTop?: Callback
-	outBottom?: Callback
-	margin?: string
-	once?: boolean
+export function isSupported() {
+	return 'IntersectionObserver' in window
 }
 
-export default class IsInView {
-	/*
-		elements = document.querySelectorAll('.dot')
-		options = {
-			thresholds: [
-				{
-					threshold: 0, // 0 to 1
-					in: (element, entry) => void,
-					inTop: (element, entry) => void,
-					inBottom: (element, entry) => void,
-					in: (element, entry) => void,
-					out: (element, entry) => void,
-					outTop: (element, entry) => void,
-					outBottom: (element, entry) => void,
-					margin: '10px 20px 30px 40px',
-					once: false,
-				},
-			],
+type Callback = (target: Element) => void
+type Target = Element | NodeListOf<Element>
+
+interface Options {
+	once: boolean,
+	threshold: number,
+}
+
+const defaultOptions: Options = {
+	once: false,
+	threshold: 0,
+}
+
+type Func = (target: Target, callback: Callback, options?: Partial<Options>) => void
+
+interface TargetsIterable {
+	[index: number]: Element
+
+	length: number
+}
+
+const buildOptions = function (options: Partial<Options>[]): Options {
+	let result: Options = defaultOptions
+
+	for (let i = 0; i < options.length; i++) {
+		result = {
+			...result,
+			...options[i],
 		}
-	*/
-
-	private elements: NodeListOf<HTMLElement> | HTMLElement[]
-	private thresholds: any
-	private margin: any
-	private observer: IntersectionObserver
-
-	constructor(
-		elements: HTMLElement | NodeListOf<HTMLElement> | HTMLElement[],
-		options: IsInViewOptions
-	) {
-		this.elements = elements instanceof HTMLElement ? [elements] : elements
-		this.thresholds = this._parseThresholds(options)
-
-		this.margin = options.margin || null
-		this.observer = this._createObserver(this.thresholds)
-		this._observe()
 	}
 
-	public destroy() {
-		this.elements.forEach((element: HTMLElement) => {
-			this.observer.unobserve(element)
-		})
+	return result
+}
+
+const observe = function (target: Target, observer: IntersectionObserver) {
+	const targets: TargetsIterable = target instanceof Element ? [target] : target
+
+	for (let i = 0; i < targets.length; i++) {
+		observer.observe(targets[i])
 	}
+}
 
-	private _parseThreshold(data: any) {
-		if (data.threshold || data.in || data.out) {
-			return {
-				threshold: data.threshold || 0,
-				in: data.in || null,
-				inTop: data.inTop || null,
-				inBottom: data.inBottom || null,
-				out: data.out || null,
-				outTop: data.outTop || null,
-				outBottom: data.outBottom || null,
-				once: data.once || false,
-			}
-		}
-		return null
-	}
-
-	private _parseThresholds(options: IsInViewOptions) {
-		const thresholds = []
-
-		thresholds.push(this._parseThreshold(options))
-
-		if (options.thresholds) {
-			options.thresholds.forEach((threshold) => {
-				thresholds.push(this._parseThreshold(threshold))
-			})
-		}
-
-		return thresholds.filter((threshold) => threshold !== null)
-	}
-
-	private _createObserver(thresholds: any) {
-		const observerOptions = {
-			threshold: [],
-		}
-
-		if (this.margin) {
-			// @ts-ignore
-			observerOptions.rootMargin = this.margin
-		}
-
-		thresholds.forEach((threshold: any) => {
-			// @ts-ignore
-			observerOptions.threshold.push(threshold.threshold)
-		})
-
-		return new IntersectionObserver((entries) => {
-			entries.forEach((entry) => this._trigger(entry))
-		}, observerOptions)
-	}
-
-	private _observe() {
-		this.elements.forEach((element: HTMLElement) => {
-			this.observer.observe(element)
-		})
-	}
-
-	private _trigger(entry: any) {
-		const intersectionRatio = entry.intersectionRatio
-		let callbacks: Callback[] = []
-		const rect = entry.boundingClientRect
-		const fromTop = rect.top + rect.height / 2 < window.innerHeight / 2
-
-		this.thresholds.forEach((threshold: any) => {
-			if (intersectionRatio >= threshold.threshold) {
-				callbacks.push(threshold.in)
-
-				if (fromTop) {
-					callbacks.push(threshold.inTop)
-				} else {
-					callbacks.push(threshold.inBottom)
-				}
-			} else {
-				callbacks.push(threshold.out)
-
-				if (fromTop) {
-					callbacks.push(threshold.outTop)
-				} else {
-					callbacks.push(threshold.outBottom)
+const createObserver = function (callback: Callback, options: Options, condition: (entry: IntersectionObserverEntry) => boolean): IntersectionObserver {
+	const observer = new IntersectionObserver((entries) => {
+		entries.forEach((entry) => {
+			const target = entry.target
+			if (condition(entry)) {
+				callback(target)
+				if (options.once) {
+					observer.unobserve(target)
 				}
 			}
-
-			callbacks = callbacks.filter((callback) => callback !== null)
-			if (callbacks.length) {
-				if (threshold.once) {
-					this.observer.unobserve(entry.target)
-				}
-				callbacks.forEach((callback) => {
-					callback.call(null, entry.target, entry)
-				})
-			}
 		})
-	}
+	}, {
+		threshold: options.threshold,
+	})
+	return observer
+}
+
+export const isInView: Func = function (target, callback, options = {}) {
+	const completeOptions = buildOptions([options])
+	const observer = createObserver(callback, completeOptions, (entry: IntersectionObserverEntry) => entry.isIntersecting)
+	observe(target, observer)
+}
+
+export const isOutOfView: Func = function (target, callback, options = {}) {
+	const completeOptions = buildOptions([options])
+	const observer = createObserver(callback, completeOptions, (entry: IntersectionObserverEntry) => !entry.isIntersecting)
+	observe(target, observer)
 }
