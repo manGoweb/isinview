@@ -1,11 +1,18 @@
 namespace IsInView {
-	export type Callback = (target: Element) => void
-	export type Target = Element | NodeListOf<Element>
 
 	export interface Options {
 		once: boolean,
 		threshold: number,
 	}
+
+	export interface Details {
+		isAboveView: boolean
+		isInView: boolean
+		isBelowView: boolean
+	}
+
+	export type Callback = (target: Element, details: Details) => void
+	export type Target = Element | NodeListOf<Element>
 }
 
 const defaultOptions: IsInView.Options = {
@@ -47,7 +54,11 @@ const createObserver = function (callback: IsInView.Callback, options: IsInView.
 		entries.forEach((entry) => {
 			const target = entry.target
 			if (condition(entry)) {
-				callback(target)
+				callback(target, {
+					isAboveView: entry.boundingClientRect.bottom < entry.rootBounds.height / 2 && entry.boundingClientRect.top < 0,
+					isInView: entry.isIntersecting,
+					isBelowView: entry.boundingClientRect.top > entry.rootBounds.height / 2 && entry.boundingClientRect.bottom > entry.rootBounds.height,
+				})
 				if (options.once) {
 					observer.unobserve(target)
 				}
