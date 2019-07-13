@@ -1,4 +1,4 @@
-namespace IsInView {
+export namespace IsInView {
 
 	export interface Options {
 		once: boolean,
