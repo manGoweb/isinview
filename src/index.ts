@@ -1,21 +1,19 @@
-export function isSupported() {
-	return 'IntersectionObserver' in window
+namespace IsInView {
+	export type Callback = (target: Element) => void
+	export type Target = Element | NodeListOf<Element>
+
+	export interface Options {
+		once: boolean,
+		threshold: number,
+	}
 }
 
-type Callback = (target: Element) => void
-type Target = Element | NodeListOf<Element>
-
-interface Options {
-	once: boolean,
-	threshold: number,
-}
-
-const defaultOptions: Options = {
+const defaultOptions: IsInView.Options = {
 	once: false,
 	threshold: 0,
 }
 
-type Func = (target: Target, callback: Callback, options?: Partial<Options>) => void
+type Func = (target: IsInView.Target, callback: IsInView.Callback, options?: Partial<IsInView.Options>) => void
 
 interface TargetsIterable {
 	[index: number]: Element
@@ -23,8 +21,8 @@ interface TargetsIterable {
 	length: number
 }
 
-const buildOptions = function (options: Partial<Options>[]): Options {
-	let result: Options = defaultOptions
+const buildOptions = function (options: Partial<IsInView.Options>[]): IsInView.Options {
+	let result: IsInView.Options = defaultOptions
 
 	for (let i = 0; i < options.length; i++) {
 		result = {
@@ -36,7 +34,7 @@ const buildOptions = function (options: Partial<Options>[]): Options {
 	return result
 }
 
-const observe = function (target: Target, observer: IntersectionObserver) {
+const observe = function (target: IsInView.Target, observer: IntersectionObserver) {
 	const targets: TargetsIterable = target instanceof Element ? [target] : target
 
 	for (let i = 0; i < targets.length; i++) {
@@ -44,7 +42,7 @@ const observe = function (target: Target, observer: IntersectionObserver) {
 	}
 }
 
-const createObserver = function (callback: Callback, options: Options, condition: (entry: IntersectionObserverEntry) => boolean): IntersectionObserver {
+const createObserver = function (callback: IsInView.Callback, options: IsInView.Options, condition: (entry: IntersectionObserverEntry) => boolean): IntersectionObserver {
 	const observer = new IntersectionObserver((entries) => {
 		entries.forEach((entry) => {
 			const target = entry.target
@@ -59,6 +57,10 @@ const createObserver = function (callback: Callback, options: Options, condition
 		threshold: options.threshold,
 	})
 	return observer
+}
+
+export function isSupported() {
+	return 'IntersectionObserver' in window
 }
 
 export const isInView: Func = function (target, callback, options = {}) {
