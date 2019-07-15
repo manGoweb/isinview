@@ -13,14 +13,13 @@ export namespace IsInView {
 
 	export type Callback = (target: Element, details: Details) => void
 	export type Target = Element | NodeListOf<Element>
+	export type CallbackRegistrar = (target: IsInView.Target, callback: IsInView.Callback, options?: Partial<IsInView.Options>) => void
 }
 
 const defaultOptions: IsInView.Options = {
 	once: false,
 	threshold: 0,
 }
-
-type Func = (target: IsInView.Target, callback: IsInView.Callback, options?: Partial<IsInView.Options>) => void
 
 interface TargetsIterable {
 	[index: number]: Element
@@ -74,13 +73,13 @@ export function isSupported() {
 	return 'IntersectionObserver' in window
 }
 
-export const isInView: Func = function (target, callback, options = {}) {
+export const isInView: IsInView.CallbackRegistrar = function (target, callback, options = {}) {
 	const completeOptions = buildOptions([options])
 	const observer = createObserver(callback, completeOptions, (entry: IntersectionObserverEntry) => entry.isIntersecting)
 	observe(target, observer)
 }
 
-export const isOutOfView: Func = function (target, callback, options = {}) {
+export const isOutOfView: IsInView.CallbackRegistrar = function (target, callback, options = {}) {
 	const completeOptions = buildOptions([options])
 	const observer = createObserver(callback, completeOptions, (entry: IntersectionObserverEntry) => !entry.isIntersecting)
 	observe(target, observer)
