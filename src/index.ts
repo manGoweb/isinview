@@ -27,17 +27,11 @@ interface TargetsIterable {
 	length: number
 }
 
-const buildOptions = function (options: Partial<IsInView.Options>[]): IsInView.Options {
-	let result: IsInView.Options = defaultOptions
-
-	for (let i = 0; i < options.length; i++) {
-		result = {
-			...result,
-			...options[i],
-		}
+const buildOptions = function (options: Partial<IsInView.Options>): IsInView.Options {
+	return {
+		...defaultOptions,
+		...options,
 	}
-
-	return result
 }
 
 const observe = function (target: IsInView.Target, observer: IntersectionObserver) {
@@ -74,13 +68,13 @@ export function isSupported() {
 }
 
 export const isInView: IsInView.CallbackRegistrar = function (target, callback, options = {}) {
-	const completeOptions = buildOptions([options])
+	const completeOptions = buildOptions(options)
 	const observer = createObserver(callback, completeOptions, (entry: IntersectionObserverEntry) => entry.isIntersecting)
 	observe(target, observer)
 }
 
 export const isOutOfView: IsInView.CallbackRegistrar = function (target, callback, options = {}) {
-	const completeOptions = buildOptions([options])
+	const completeOptions = buildOptions(options)
 	const observer = createObserver(callback, completeOptions, (entry: IntersectionObserverEntry) => !entry.isIntersecting)
 	observe(target, observer)
 }
