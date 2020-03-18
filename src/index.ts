@@ -46,7 +46,7 @@ const createObserver = function (callback: IsInView.Callback, options: IsInView.
 	const observer = new IntersectionObserver((entries) => {
 		entries.forEach((entry) => {
 			const target = entry.target
-			if (condition(entry)) {
+			if (entry.rootBounds !== null && condition(entry)) {
 				callback(target, {
 					isAboveView: entry.boundingClientRect.bottom < entry.rootBounds.height / 2 && entry.boundingClientRect.top < 0,
 					isInView: entry.isIntersecting,
