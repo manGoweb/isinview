@@ -8,6 +8,10 @@ Watch elements entering or leaving a viewport.
 npm install isinview
 ```
 
+## [Demo](https://raw.githack.com/manGoweb/isinview/master/demo.html)
+
+![Screencast](demo.gif)
+
 ## How to use
 
 ```javascript

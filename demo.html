@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>Is in view</title>
+		<style>
+			body {
+				text-align: center;
+				font-family: sans-serif;
+			}
+			.bar {
+				width: 50%;
+				margin-left: auto;
+				transition-property: opacity, transform;
+				opacity: 0;
+				transition-duration: 0.5s;
+				height: 5vh;
+				margin: 0.5em auto 0;
+				background-color: currentColor;
+			}
+			.bar.is-visible {
+				transform: scaleX(2);
+				opacity: 1;
+			}
+			.start,
+			.end {
+				min-height: 50vh;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				flex-direction: column;
+				overflow: hidden;
+				padding: 1em 0;
+			}
+			.end {
+				animation-direction: alternate-reverse;
+				transition: opacity 1s 0.2s;
+				opacity: 0;
+			}
+			.end.is-in-viewport {
+				opacity: 1;
+			}
+			@keyframes point {
+				0% {
+					transform: translateY(-0.5em);
+				}
+				100% {
+					transform: translateY(0.5em);
+				}
+			}
+			.arrow {
+				margin: 0.5em 0;
+				font-size: 10em;
+				animation: point 1s infinite alternate ease;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>Is in view demo</h1>
+		<p>Scroll and watch elements moving.</p>
+		<div class="start"><span class="arrow">🔽</span></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="bar"></div>
+		<div class="end">
+			<span class="arrow">🔼</span>
+			<p>Bottom arrow fades in only once.</p>
+		</div>
+		<script type="module">
+			import('./dist/index.js')
+				.catch(() => import('https://unpkg.com/isinview@latest/dist/index.js'))
+				.then((library) => {
+					const { isInView, isOutOfView } = library
+
+					const bars = document.querySelectorAll('.bar')
+					isInView(bars, (target) => {
+						target.classList.add('is-visible')
+					})
+
+					isOutOfView(bars, (target) => {
+						target.classList.remove('is-visible')
+					})
+
+					isInView(
+						document.querySelector('.end'),
+						(end) => {
+							end.classList.add('is-in-viewport')
+						},
+						{ once: true, threshold: 0.7 }
+					)
+				})
+		</script>
+	</body>
+</html>
