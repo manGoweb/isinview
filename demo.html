@@ -149,8 +149,8 @@
 			<p>Bottom arrow fades in only once.</p>
 		</div>
 		<script type="module">
-			import('./dist/index.js')
-				.catch(() => import('https://unpkg.com/isinview@latest/dist/index.js'))
+			import('./dist/index.es.js')
+				.catch(() => import('https://unpkg.com/isinview@latest/dist/index.es.js'))
 				.then((library) => {
 					const { isInView, isOutOfView } = library
 
