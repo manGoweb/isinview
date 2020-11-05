@@ -1,6 +1,6 @@
 {
 	"name": "isinview",
-	"version": "2.1.1",
+	"version": "2.2.0",
 	"description": "Watch elements entering or leaving viewport",
 	"main": "./dist/index.js",
 	"module": "./dist/index.es.js",
