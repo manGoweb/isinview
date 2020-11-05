@@ -10,7 +10,7 @@ npm install isinview
 
 ## [Demo](https://raw.githack.com/manGoweb/isinview/master/demo.html)
 
-![Screencast](demo.gif)
+![Screencast](https://raw.githubusercontent.com/manGoweb/isinview/HEAD/demo.gif)
 
 ## How to use
 
@@ -38,9 +38,13 @@ const options = {
 	threshold: 0.5, // Fraction of target's area that must be visible [0 - 1]
 }
 
-isInView(document.querySelectorAll('.target'), (target) => {
-	console.log('Target element has entered the viewport', target)
-}, options)
+isInView(
+	document.querySelectorAll('.target'),
+	(target) => {
+		console.log('Target element has entered the viewport', target)
+	},
+	options
+)
 ```
 
 ## Support
@@ -48,7 +52,9 @@ isInView(document.querySelectorAll('.target'), (target) => {
 ```javascript
 import { isSupported } from 'isinview'
 
-console.log(isSupported() ? 'IsInView is supported.' : 'IsInView is not supported!')
+console.log(
+	isSupported() ? 'IsInView is supported.' : 'IsInView is not supported!'
+)
 ```
 
 Based on IntersectionObserver ([caniuse](https://caniuse.com/#feat=intersectionobserver)).
@@ -56,5 +62,8 @@ Based on IntersectionObserver ([caniuse](https://caniuse.com/#feat=intersectiono
 Polyfill for IE and old Safari:
 
 ```html
-<script crossorigin="anonymous" src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver"></script>
+<script
+	crossorigin="anonymous"
+	src="https://polyfill.io/v3/polyfill.min.js?features=IntersectionObserver"
+></script>
 ```
