@@ -8,7 +8,7 @@ Watch elements entering or leaving a viewport.
 npm install isinview
 ```
 
-## [Demo](https://raw.githack.com/manGoweb/isinview/main/demo.html)
+## [Demo](https://mangoweb.github.io/isinview/demo)
 
 ![Screencast](https://raw.githubusercontent.com/manGoweb/isinview/HEAD/demo.gif)
 
