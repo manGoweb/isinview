@@ -1,4 +1,4 @@
-# Isinview [![npm](https://img.shields.io/npm/v/isinview.svg)](https://www.npmjs.com/package/isinview) [![David](https://img.shields.io/david/onset/isinview.svg)](https://www.npmjs.com/package/isinview?activeTab=dependencies) ![npm type definitions](https://img.shields.io/npm/types/isinview.svg)
+# Isinview [![npm](https://img.shields.io/npm/v/isinview.svg)](https://www.npmjs.com/package/isinview) ![npm type definitions](https://img.shields.io/npm/types/isinview.svg)
 
 Watch elements entering or leaving a viewport.
 
